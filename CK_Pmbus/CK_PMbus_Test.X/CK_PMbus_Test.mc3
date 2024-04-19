@@ -3128,23 +3128,7 @@
          <value>OFF</value>
       </entry>
       <entry>
-         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="SCL%aux3"/>
-         <value>OFF</value>
-      </entry>
-      <entry>
-         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="SCL%aux5"/>
-         <value>OFF</value>
-      </entry>
-      <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="SDA%aux0"/>
-         <value>OFF</value>
-      </entry>
-      <entry>
-         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="SDA%aux2"/>
-         <value>OFF</value>
-      </entry>
-      <entry>
-         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="SDA%aux4"/>
          <value>OFF</value>
       </entry>
       <entry>
@@ -7925,7 +7909,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="TMR1" registerAlias="TI" settingAlias="enable"/>
-         <value>disabled</value>
+         <value>enabled</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="TMR1" registerAlias="TI" settingAlias="flag"/>
@@ -8043,7 +8027,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files\interrupt_manager.c</file>
-         <hash>ccf0e027750a24634d772f22aa6b0038e222524153279dd5acf6000d5d6540ad</hash>
+         <hash>8d55f9e76304815f9b40d2b7fa4c8ab421ba116e4fe20bdba727541c50d87d99</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\interrupt_manager.h</file>
@@ -8055,7 +8039,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files\mcc.h</file>
-         <hash>ca153f7ad243ea8028846d2c5380e1283a0e93f0099ebcdaf81615ff0bf54f99</hash>
+         <hash>c993aef1b460088cd35716466f6cf15344c0df91489b544d9cc9c6f4fc9634c2</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\pin_manager.c</file>
@@ -8079,7 +8063,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files\system.c</file>
-         <hash>0818dd08b2b0dd99b81539b18db97982d67560fc844e86c16c88b8ca9a63d68a</hash>
+         <hash>d22c8bc6e570271f36d7c35e07a43da142ef57f95da6ecc5106a8941d010731b</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\system.h</file>
@@ -8091,11 +8075,11 @@
       </entry>
       <entry>
          <file>mcc_generated_files\tmr1.c</file>
-         <hash>686bec11dce0e2f0ec79af314ede4bcaf93e24ad094f866cdf9ec3e733a1c0e4</hash>
+         <hash>42b0e9a6b2d2a13f6fb853bf9ad44e755220e6b45fb62576c47810ad40645927</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\tmr1.h</file>
-         <hash>92fa365e8b5ef0bf0f702801341b372c3ea275628afef2866b6ec2ea8d186287</hash>
+         <hash>bd9c94ca4a9327af6d1c68fae6de9c3103132ce40a5e3fddb53961fc3549fd9f</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\traps.c</file>

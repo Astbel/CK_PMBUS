@@ -1,0 +1,8 @@
+{
+    "C_Cpp.errorSquiggles": "disabled",
+    "files.associations": {
+        "isr.h": "c",
+        "i2c1.h": "c",
+        "system.h": "c"
+    }
+}

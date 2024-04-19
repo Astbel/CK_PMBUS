@@ -58,4 +58,7 @@ void INTERRUPT_Initialize (void)
     //    SICI: I2C1 Slave Event
     //    Priority: 1
         IPC4bits.SI2C1IP = 1;
+    //    TI: Timer 1
+    //    Priority: 1
+        IPC0bits.T1IP = 1;
 }
