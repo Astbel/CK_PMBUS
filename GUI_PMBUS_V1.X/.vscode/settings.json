@@ -1,0 +1,10 @@
+{
+    "C_Cpp.errorSquiggles": "disabled",
+    "files.associations": {
+        "pin_manager.h": "c",
+        "mythread.h": "c",
+        "myheader.h": "c",
+        "i2c1.h": "c",
+        "uart1.h": "c"
+    }
+}

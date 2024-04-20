@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+  <executable name="dist/default/debug/GUI_PMBUS_V1.X.debug.elf">
+    <memory name="data">
+      <units>bytes</units>
+      <length>8192</length>
+      <used>136</used>
+      <free>8056</free>
+    </memory>
+    <memory name="program">
+      <units>bytes</units>
+      <length>66432</length>
+      <used>4017</used>
+      <free>62415</free>
+    </memory>
+  </executable>
+</project>
