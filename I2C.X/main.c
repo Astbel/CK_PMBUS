@@ -49,36 +49,31 @@
 #include "mcc_generated_files/i2c1.h"
 #include "mcc_generated_files/pin_manager.h"
 #include "stdio.h"
+#include "SRC/MyHeader.h"
+
+
 /*
                          Main application
  */
-#define TEST_SEND 0x0A
-#define TEST_ADDR 0x0A
 
-uint8_t i2cWrData = TEST_SEND;
 int main(void)
 {
   // initialize the device
   SYSTEM_Initialize();
+
+  Init_value();
   while (1)
   {
-    uint8_t writeBuffer[3];
-    uint16_t timeOut, slaveTimeOut;
-    I2C1_MESSAGE_STATUS status;
-    I2C1_TRANSACTION_REQUEST_BLOCK readTRB[2];
 
     // this initial value is important
-    writeBuffer[0] = i2cWrData;
+    //  writeBuffer[0] = i2cWrData;
 
     // I2C1_MasterWriteTRBBuild(&readTRB[0],
     //                          writeBuffer,
     //                          1,
     //                          TEST_ADDR);
-      
-     I2C1_MasterWrite(&writeBuffer,1,TEST_ADDR,I2C1_MESSAGE_COMPLETE);
 
-
-
+    //     I2C1_MasterWrite(&writeBuffer,1,TEST_ADDR,I2C1_MESSAGE_COMPLETE);
   }
   return 1;
 }

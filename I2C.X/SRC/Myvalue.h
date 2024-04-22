@@ -1,28 +1,49 @@
-#ifndef PMBUS_STACK_H
-#define PMBUS_STACK_H
+#ifndef MYVALUE_H
+#define MYVALUE_H
+/*-----------------------------------------------
+   include func
+-----------------------------------------------*/
+#include "MyHeader.h"
+
 
 /*-----------------------------------------------
-    include files
+   struct enum 
 -----------------------------------------------*/
 
 
-/*-----------------------------------------------
-    type_def
------------------------------------------------*/
-#define TEST_SEND 0x0A
-#define TEST_ADDR 0x0A
 
 /*-----------------------------------------------
-   public func
+   var delc
 -----------------------------------------------*/
-void I2C_Fun(void);
+extern uint8_t i2cWrData;
+extern uint8_t writeBuffer[3];
+// uint16_t timeOut, slaveTimeOut;
+
+/*-----------------------------------------------
+   public func delc
+-----------------------------------------------*/
+void Init_value(void);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-
 #ifdef __cplusplus
 }
 #endif

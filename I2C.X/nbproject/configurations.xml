@@ -49,6 +49,7 @@
       </logicalFolder>
       <logicalFolder name="SRC" displayName="SRC" projectFiles="true">
         <itemPath>SRC/pmbus_stack.c</itemPath>
+        <itemPath>SRC/Myvalue.c</itemPath>
       </logicalFolder>
       <itemPath>main.c</itemPath>
     </logicalFolder>
