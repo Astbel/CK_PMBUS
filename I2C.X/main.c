@@ -51,7 +51,6 @@
 #include "stdio.h"
 #include "SRC/MyHeader.h"
 
-
 /*
                          Main application
  */
@@ -74,6 +73,8 @@ int main(void)
     //                          TEST_ADDR);
 
     //     I2C1_MasterWrite(&writeBuffer,1,TEST_ADDR,I2C1_MESSAGE_COMPLETE);
+
+  
   }
   return 1;
 }

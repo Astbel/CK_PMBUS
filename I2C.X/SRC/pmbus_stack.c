@@ -46,10 +46,7 @@
 #include "commands.h"
 #include "Myvalue.h"
 
-#define MasterWritesAddress 0x2
-#define MasterWritesData 0x22
-#define MasterReadsAddress 0x6
-#define MasterReadsData 0x24
+
 
 unsigned char counter_MWD = 0;
 unsigned char counter_MRD = 0;
@@ -785,7 +782,7 @@ void I2CSlaveHandler(void)
         {
             if (counter_MWD == 0)
             {
-                HostWritesCommandByte();
+                HostWritesCommandByte();  /*I2C CMD READ/WRITE*/
             }
 
             else
@@ -807,7 +804,7 @@ void I2CSlaveHandler(void)
         else
         {
             TransmissionContentFaultHandler(2); /* Improper address bit in the address byte */
-            WriteData(0xFF);
+            WriteData(0xFF);  /* 錯誤代碼 &  clear memory block */
         }
         break;
 
@@ -851,7 +848,6 @@ void I2CSlaveHandler(void)
 // void __attribute__((__interrupt__, no_auto_psv)) _T1Interrupt()
 void __attribute__((weak)) TMR1_CallBack(void)
 {
-#if (Test_Timer_I2C == False)
     IFS0bits.T1IF = 0; /* Clear Interrupt Flag */
     TMR1 = 0;
 
@@ -875,8 +871,6 @@ void __attribute__((weak)) TMR1_CallBack(void)
         //		I2C1CONbits.SCLREL = 1;		/*33F series  Release SCL Clock */
         I2C1CONLbits.SCLREL = 1; /* Release SCL Clock */
     }
-#endif
-
 }
 /********************************************************************
  * Function:        call back function for Timer1
@@ -891,7 +885,9 @@ void __attribute__((weak)) TMR1_CallBack(void)
 void I2C_Fun(void)
 {
     
-    I2C1_MasterWrite(&writeBuffer,1,TEST_ADDR,I2C1_MESSAGE_COMPLETE);
+    // I2C1_MasterWrite(&writeBuffer,1,TEST_ADDR,I2C1_MESSAGE_COMPLETE);
+
+    
 }
 
 

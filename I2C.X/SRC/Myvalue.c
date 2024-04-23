@@ -7,8 +7,8 @@
 /*-----------------------------------------------
    Struct delcare
 -----------------------------------------------*/
-I2C1_MESSAGE_STATUS status;
-I2C1_TRANSACTION_REQUEST_BLOCK readTRB[2];
+//I2C1_MESSAGE_STATUS status;
+//I2C1_TRANSACTION_REQUEST_BLOCK readTRB[2];
 /*-----------------------------------------------
    value  delcare
 -----------------------------------------------*/

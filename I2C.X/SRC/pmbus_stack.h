@@ -9,8 +9,16 @@
 /*-----------------------------------------------
     type_def
 -----------------------------------------------*/
-#define TEST_SEND 0x0A
-#define TEST_ADDR 0x0A
+
+
+
+#define MasterWritesAddress 0x2
+#define MasterWritesData 0x22
+#define MasterReadsAddress 0x6
+#define MasterReadsData 0x24
+/*-----------------------------------------------
+    Struct Enum  Uion
+-----------------------------------------------*/
 
 /*-----------------------------------------------
    public func

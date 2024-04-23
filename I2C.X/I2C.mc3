@@ -145,7 +145,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="I2C1" name="MasterMode"/>
-         <value>Master</value>
+         <value>Slave</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="I2C1" name="SCL"/>
@@ -457,7 +457,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="I2C1" registerAlias="I2CADD"/>
-         <value>0</value>
+         <value>64</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="I2C1" registerAlias="I2CBRG"/>
@@ -485,7 +485,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="I2C1" registerAlias="I2CADD" settingAlias="I2CADD"/>
-         <value>0</value>
+         <value>64</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="I2C1" registerAlias="I2CBRG" settingAlias="I2CBRG"/>
@@ -4224,15 +4224,7 @@
          <value>OFF</value>
       </entry>
       <entry>
-         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="SCL%aux3"/>
-         <value>OFF</value>
-      </entry>
-      <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="SDA%aux0"/>
-         <value>OFF</value>
-      </entry>
-      <entry>
-         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="SDA%aux2"/>
          <value>OFF</value>
       </entry>
       <entry>
@@ -9307,11 +9299,11 @@
       </entry>
       <entry>
          <file>mcc_generated_files\i2c1.c</file>
-         <hash>9ec7d49fa22162974b6ad7a4a5abbb460a5dc30e30e455328e4475701946a470</hash>
+         <hash>c2f3c4e749b4b0f8281b6783961c54771c9dde4c7eb7963b4fa363313f0a627f</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\i2c1.h</file>
-         <hash>db151a384819c00e374421aacf281eb6d6ffc9c0004e0c665ed8da1c963bf700</hash>
+         <hash>84a663bc0a9dcbdfe559ce4bb852ecbbf5b6a7624bcf21375845144e58224205</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\interrupt_manager.c</file>
@@ -9327,7 +9319,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files\mcc.h</file>
-         <hash>e60820eeb65eb31211feec6454ef048dff3eba492228b4b4c978efaa9498d7c9</hash>
+         <hash>63b429cd489ea05aeacda31358375f3d39ae1a7c49c02ccc759c60133702fb4e</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\pin_manager.c</file>
@@ -9351,7 +9343,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files\system.c</file>
-         <hash>89254386416d2b657ba87d16e297e2cf5cc4250b991601f9e39fa85a968129d9</hash>
+         <hash>5106846e7123de058a2b7f6d847dc7775e9e0426fd8f5579970c4dbc70313f43</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\system.h</file>

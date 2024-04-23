@@ -159,7 +159,7 @@ uint16_t TMR1_Counter16BitGet( void )
 
 void __attribute__ ((weak)) TMR1_CallBack(void)
 {
-   I2C_Fun();
+   
 }
 
 void  TMR1_SetInterruptHandler(void (* InterruptHandler)(void))
