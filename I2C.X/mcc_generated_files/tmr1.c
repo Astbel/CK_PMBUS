@@ -1,6 +1,6 @@
 
 /**
-  TMR1 Generated Driver API Source File 
+  TMR1 Generated Driver API Source File
 
   @Company
     Microchip Technology Inc.
@@ -12,8 +12,8 @@
     This is the generated source file for the TMR1 driver using PIC24 / dsPIC33 / PIC32MM MCUs
 
   @Description
-    This source file provides APIs for driver for TMR1. 
-    Generation Information : 
+    This source file provides APIs for driver for TMR1.
+    Generation Information :
         Product Revision  :  PIC24 / dsPIC33 / PIC32MM MCUs - 1.171.4
         Device            :  dsPIC33CK64MP102
     The generated drivers are tested against the following:
@@ -49,6 +49,9 @@
 
 #include <stdio.h>
 #include "tmr1.h"
+#include "i2c1.h"
+#include "../SRC/pmbus_stack.h"
+
 
 /**
  Section: File specific functions
@@ -75,10 +78,10 @@ void TMR1_CallBack(void);
 
 typedef struct _TMR_OBJ_STRUCT
 {
-    /* Timer Elapsed */
-    volatile bool           timerElapsed;
-    /*Software Counter value*/
-    volatile uint8_t        count;
+  /* Timer Elapsed */
+  volatile bool timerElapsed;
+  /*Software Counter value*/
+  volatile uint8_t count;
 
 } TMR_OBJ;
 
@@ -88,129 +91,144 @@ static TMR_OBJ tmr1_obj;
   Section: Driver Interface
 */
 
-void TMR1_Initialize (void)
+void TMR1_Initialize(void)
 {
-    //TMR 0; 
-    TMR1 = 0x00;
-    //Period = 0.00001984 s; Frequency = 100000000 Hz; PR 30; 
-    PR1 = 0x1E;
-    //TCKPS 1:64; PRWIP Write complete; TMWIP Write complete; TON enabled; TSIDL disabled; TCS FOSC/2; TECS T1CK; TSYNC disabled; TMWDIS disabled; TGATE disabled; 
-    T1CON = 0x8020;
+  // TMR 0;
+  TMR1 = 0x00;
+  // Period = 0.00001984 s; Frequency = 100000000 Hz; PR 30;
+  PR1 = 0x1E;
+  // TCKPS 1:64; PRWIP Write complete; TMWIP Write complete; TON enabled; TSIDL disabled; TCS FOSC/2; TECS T1CK; TSYNC disabled; TMWDIS disabled; TGATE disabled;
+  T1CON = 0x8020;
 
-    if(TMR1_InterruptHandler == NULL)
-    {
-        TMR1_SetInterruptHandler(&TMR1_CallBack);
-    }
+  if (TMR1_InterruptHandler == NULL)
+  {
+    TMR1_SetInterruptHandler(&TMR1_CallBack);
+  }
 
-    IFS0bits.T1IF = false;
-    IEC0bits.T1IE = true;
-	
-    tmr1_obj.timerElapsed = false;
+  IFS0bits.T1IF = false;
+  IEC0bits.T1IE = true;
 
+  tmr1_obj.timerElapsed = false;
+}
+
+void TMR1_Period16BitSet(uint16_t value)
+{
+  /* Update the counter values */
+  PR1 = value;
+  /* Reset the status information */
+  tmr1_obj.timerElapsed = false;
+}
+
+uint16_t TMR1_Period16BitGet(void)
+{
+  return (PR1);
+}
+
+void TMR1_Counter16BitSet(uint16_t value)
+{
+  /* Update the counter values */
+  TMR1 = value;
+  /* Reset the status information */
+  tmr1_obj.timerElapsed = false;
+}
+
+uint16_t TMR1_Counter16BitGet(void)
+{
+  return (TMR1);
 }
 
 
-void __attribute__ ( ( interrupt, no_auto_psv ) ) _T1Interrupt (  )
+void TMR1_Start(void)
 {
-    /* Check if the Timer Interrupt/Status is set */
+  /* Reset the status information */
+  tmr1_obj.timerElapsed = false;
 
-    //***User Area Begin
+  /*Enable the interrupt*/
+  IEC0bits.T1IE = true;
 
-    // ticker function call;
-    // ticker is 1 -> Callback function gets called everytime this ISR executes
-    if(TMR1_InterruptHandler) 
-    { 
-           TMR1_InterruptHandler(); 
-    }
-
-    //***User Area End
-
-    tmr1_obj.count++;
-    tmr1_obj.timerElapsed = true;
-    IFS0bits.T1IF = false;
+  /* Start the Timer */
+  T1CONbits.TON = 1;
 }
 
-void TMR1_Period16BitSet( uint16_t value )
+void TMR1_Stop(void)
 {
-    /* Update the counter values */
-    PR1 = value;
-    /* Reset the status information */
-    tmr1_obj.timerElapsed = false;
-}
+  /* Stop the Timer */
+  T1CONbits.TON = false;
 
-uint16_t TMR1_Period16BitGet( void )
-{
-    return( PR1 );
-}
-
-void TMR1_Counter16BitSet ( uint16_t value )
-{
-    /* Update the counter values */
-    TMR1 = value;
-    /* Reset the status information */
-    tmr1_obj.timerElapsed = false;
-}
-
-uint16_t TMR1_Counter16BitGet( void )
-{
-    return( TMR1 );
-}
-
-
-void __attribute__ ((weak)) TMR1_CallBack(void)
-{
-   
-}
-
-void  TMR1_SetInterruptHandler(void (* InterruptHandler)(void))
-{ 
-    IEC0bits.T1IE = false;
-    TMR1_InterruptHandler = InterruptHandler; 
-    IEC0bits.T1IE = true;
-}
-
-void TMR1_Start( void )
-{
-    /* Reset the status information */
-    tmr1_obj.timerElapsed = false;
-
-    /*Enable the interrupt*/
-    IEC0bits.T1IE = true;
-
-    /* Start the Timer */
-    T1CONbits.TON = 1;
-}
-
-void TMR1_Stop( void )
-{
-    /* Stop the Timer */
-    T1CONbits.TON = false;
-
-    /*Disable the interrupt*/
-    IEC0bits.T1IE = false;
+  /*Disable the interrupt*/
+  IEC0bits.T1IE = false;
 }
 
 bool TMR1_GetElapsedThenClear(void)
 {
-    bool status;
-    
-    status = tmr1_obj.timerElapsed;
+  bool status;
 
-    if(status == true)
-    {
-        tmr1_obj.timerElapsed = false;
-    }
-    return status;
+  status = tmr1_obj.timerElapsed;
+
+  if (status == true)
+  {
+    tmr1_obj.timerElapsed = false;
+  }
+  return status;
 }
 
 int TMR1_SoftwareCounterGet(void)
 {
-    return tmr1_obj.count;
+  return tmr1_obj.count;
 }
 
 void TMR1_SoftwareCounterClear(void)
 {
-    tmr1_obj.count = 0; 
+  tmr1_obj.count = 0;
+}
+
+/********************************************************************
+ * Function:        Timer1 ISR
+ *
+ * PreCondition:    None
+ *
+ * Input:           None
+ *
+ * Output:          None
+ *
+ * Side Effects:    None
+ *
+ * Overview:        This interruput service routine determines when a
+ *				           stop condition has occured and enables buffer to ram
+ *				           copy if the command was a write protocol.
+ *
+ * Note:            None
+ *******************************************************************/
+void __attribute__((interrupt, no_auto_psv)) _T1Interrupt()
+{
+  /* Check if the Timer Interrupt/Status is set */
+
+  //***User Area Begin
+
+  // ticker function call;
+  // ticker is 1 -> Callback function gets called everytime this ISR executes
+  if (TMR1_InterruptHandler)
+  {
+    TMR1_InterruptHandler();
+  }
+
+  //***User Area End
+
+  tmr1_obj.count++;
+  tmr1_obj.timerElapsed = true;
+  IFS0bits.T1IF = false;
+}
+/*回調函示*/
+void __attribute__((weak)) TMR1_CallBack(void)
+{
+
+}
+
+void TMR1_SetInterruptHandler(void (*InterruptHandler)(void))
+{
+  IEC0bits.T1IE = false;
+  TMR1_InterruptHandler = InterruptHandler;
+  IEC0bits.T1IE = true;
 }
 
 /**

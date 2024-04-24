@@ -43,7 +43,7 @@
     MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE OF THESE
     TERMS.
 */
-
+#include "../SRC/pmbus_stack.h"
 #include "i2c1.h"
 
 /**
@@ -73,42 +73,42 @@ typedef enum
  Section: Macro Definitions
 */
 /* defined for I2C1 */
-#define I2C1_TRANSMIT_REG                       I2C1TRN	// Defines the transmit register used to send data.
-#define I2C1_RECEIVE_REG                        I2C1RCV	// Defines the receive register used to receive data.
+#define I2C1_TRANSMIT_REG I2C1TRN // Defines the transmit register used to send data.
+#define I2C1_RECEIVE_REG I2C1RCV  // Defines the receive register used to receive data.
 
-#define I2C1_MASK_REG                           I2C1MSK	// Defines the address mask register.
-#define I2C1_ADDRESS_REG                        I2C1ADD	// Defines the address register. 
+#define I2C1_MASK_REG I2C1MSK    // Defines the address mask register.
+#define I2C1_ADDRESS_REG I2C1ADD // Defines the address register.
 
 // The following control bits are used in the I2C state machine to manage
 // the I2C module and determine next states.
-#define I2C1_GENERAL_CALL_ENABLE_BIT            I2C1CONLbits.GCEN	// I2C General Call enable control bit.
-#define I2C1_10_BIT_ADDRESS_ENABLE_BIT          I2C1CONLbits.A10M	// I2C Address Mode (7 or 10 bit address) control bit.
-#define I2C1_RELEASE_SCL_CLOCK_CONTROL_BIT      I2C1CONLbits.SCLREL	// I2C clock stretch/release control bit.
+#define I2C1_GENERAL_CALL_ENABLE_BIT I2C1CONLbits.GCEN         // I2C General Call enable control bit.
+#define I2C1_10_BIT_ADDRESS_ENABLE_BIT I2C1CONLbits.A10M       // I2C Address Mode (7 or 10 bit address) control bit.
+#define I2C1_RELEASE_SCL_CLOCK_CONTROL_BIT I2C1CONLbits.SCLREL // I2C clock stretch/release control bit.
 
 // The following status bits are used in the I2C state machine to determine
 // the next states.
 
-#define I2C1_READ_NOT_WRITE_STATUS_BIT          I2C1STATbits.R_W    // I2C current transaction read/write status bit.
-#define I2C1_DATA_NOT_ADDRESS_STATUS_BIT        I2C1STATbits.D_A    // I2C last byte receive was data/address status bit.
-#define I2C1_RECEIVE_OVERFLOW_STATUS_BIT        I2C1STATbits.I2COV	// I2C receive buffer overflow status bit.
-#define I2C1_GENERAL_CALL_ADDRESS_STATUS_BIT    I2C1STATbits.GCSTAT	// I2C General Call status bit.
-#define I2C1_ACKNOWLEDGE_STATUS_BIT             I2C1STATbits.ACKSTAT	// I2C ACK status bit.
+#define I2C1_READ_NOT_WRITE_STATUS_BIT I2C1STATbits.R_W          // I2C current transaction read/write status bit.
+#define I2C1_DATA_NOT_ADDRESS_STATUS_BIT I2C1STATbits.D_A        // I2C last byte receive was data/address status bit.
+#define I2C1_RECEIVE_OVERFLOW_STATUS_BIT I2C1STATbits.I2COV      // I2C receive buffer overflow status bit.
+#define I2C1_GENERAL_CALL_ADDRESS_STATUS_BIT I2C1STATbits.GCSTAT // I2C General Call status bit.
+#define I2C1_ACKNOWLEDGE_STATUS_BIT I2C1STATbits.ACKSTAT         // I2C ACK status bit.
 
-#define EMULATE_EEPROM_SIZE                     64
+#define EMULATE_EEPROM_SIZE 64
 /**
  Section: Local Functions
 */
 
-inline void __attribute__ ((always_inline)) I2C1_TransmitProcess(void);
-inline void __attribute__ ((always_inline)) I2C1_ReceiveProcess(void);
+inline void __attribute__((always_inline)) I2C1_TransmitProcess(void);
+inline void __attribute__((always_inline)) I2C1_ReceiveProcess(void);
 
 /**
  Section: Local Variables
 */
 
-static I2C_SLAVE_STATES   i2c1_slave_state;
-static uint8_t            *p_i2c1_write_pointer;
-static uint8_t            *p_i2c1_read_pointer;
+static I2C_SLAVE_STATES i2c1_slave_state;
+static uint8_t *p_i2c1_write_pointer;
+static uint8_t *p_i2c1_read_pointer;
 
 /**
   Prototype:        void I2C1_Initialize(void)
@@ -116,253 +116,63 @@ static uint8_t            *p_i2c1_read_pointer;
   Output:           none
   Description:      I2C1_Initialize is an
                     initialization routine that takes inputs from the GUI.
-  Comment:          
+  Comment:
   Usage:            I2C1_Initialize();
 */
 void I2C1_Initialize(void)
 {
 
     // initialize the hardware
-    // ACKEN disabled; STRICT disabled; STREN disabled; GCEN disabled; SMEN disabled; DISSLW enabled; I2CSIDL disabled; ACKDT Sends ACK; SCLREL Holds; RSEN disabled; A10M 7 Bit; PEN disabled; RCEN disabled; SEN disabled; I2CEN enabled; 
+    // ACKEN disabled; STRICT disabled; STREN disabled; GCEN disabled; SMEN disabled; DISSLW enabled; I2CSIDL disabled; ACKDT Sends ACK; SCLREL Holds; RSEN disabled; A10M 7 Bit; PEN disabled; RCEN disabled; SEN disabled; I2CEN enabled;
     I2C1CONL = 0x8000;
-    // BCL disabled; P disabled; S disabled; I2COV disabled; IWCOL disabled; 
+    // BCL disabled; P disabled; S disabled; I2COV disabled; IWCOL disabled;
     I2C1STAT = 0x00;
-    // ADD 64; 
+    // ADD 64;
     I2C1_SlaveAddressSet(0x40);
-    // AMSK 0; 
+    // AMSK 0;
     I2C1_SlaveAddressMaskSet(0x00);
 
     // make sure this is set first
     i2c1_slave_state = S_SLAVE_IDLE;
-    
+
     I2C1_ReadPointerSet(NULL);
     I2C1_WritePointerSet(NULL);
-    
+
     /* I2C1 Slave Event */
     // clear the master interrupt flag
     IFS1bits.SI2C1IF = 0;
     // enable the master interrupt
     IEC1bits.SI2C1IE = 1;
-    
 }
+/********************************************************************
+ * Function:        I2C ISR
+ *
+ * PreCondition:    None
+ *
+ * Input:           None
+ *
+ * Output:          None
+ *
+ * Side Effects:    None
+ *
+ * Overview:        I2C interrupt service routine
+ *
+ * Note:            None
+ *******************************************************************/
 
-
-void __attribute__ ( ( interrupt, no_auto_psv ) ) _SI2C1Interrupt ( void )
+void __attribute__((interrupt, no_auto_psv)) _SI2C1Interrupt(void)
 {
 
-    static bool  prior_address_match = false;
-    static bool  not_busy = true;
-    uint8_t      dummy;
-
-    // NOTE: The slave driver will always acknowledge 
-    //       any address match.
-
-    switch (i2c1_slave_state)
+    if ((I2C1STAT & 0x8024) == 0x8024)
     {
-        case S_SLAVE_IDLE:
-        case S_SLAVE_RECEIVE_MODE:
-
-            /* When at S_SLAVE_RECEIVE_MODE this mode there
-               will be two types of incoming transactions:
-               1. Data sent by master
-               2. A restart or start detection
-
-               But from the point of view of the firmware, there is
-               no difference between S_SLAVE_IDLE and S_SLAVE_RECEIVE_MODE
-               states, since the types of incoming transactions will be
-               the same so we share the code here.
-             */
-
-            if  (
-                    // case of 7-bit address detected
-                    (   (I2C1_10_BIT_ADDRESS_ENABLE_BIT       == 0) &&
-                        (I2C1_DATA_NOT_ADDRESS_STATUS_BIT     == 0)
-                    )
-                    ||
-                    // case of general address call detected
-                    (   (I2C1_GENERAL_CALL_ENABLE_BIT         == 1) &&
-                        (I2C1_GENERAL_CALL_ADDRESS_STATUS_BIT == 1)
-                    )
-                )
-            {
-                            
-                if (I2C1_READ_NOT_WRITE_STATUS_BIT == 0)
-                {
-                    // it is a write, go to receive mode 
-
-                    I2C1_StatusCallback(I2C1_SLAVE_RECEIVE_REQUEST_DETECTED);
-                    
-                    // Receive the data if valid
-                    I2C1_ReceiveProcess();
-                    i2c1_slave_state = S_SLAVE_RECEIVE_MODE;
-                }
-                else
-                {
-                    // read the receive register only when
-                    // we are ready for the next transaction.
-                    // this one is a dummy read
-                    dummy = I2C1_RECEIVE_REG;
-                    
-                    // it is a read, go to transmit mode
-                    
-                    I2C1_StatusCallback(I2C1_SLAVE_TRANSMIT_REQUEST_DETECTED);
-
-                    // during this portion, the master is expecting the
-                    // slave for a reply. So the returned status of
-                    // the callback at this point cannot be used to 
-                    // delay the reply if needed.
-                    // In other words, the slave has to reply to the master.
-                    // Therefore, the transmit will be performed.
-                    
-                    I2C1_TransmitProcess();
-                    i2c1_slave_state = S_SLAVE_TRANSMIT_MODE;
-                }
-
-            }
-
-            else if
-               (
-                    // case of 10-bit high address detected
-                    (   (I2C1_10_BIT_ADDRESS_ENABLE_BIT   == 1)  &&
-                        (I2C1_DATA_NOT_ADDRESS_STATUS_BIT == 0)
-                    )
-               )
-            {
-                if (I2C1_READ_NOT_WRITE_STATUS_BIT == 0)
-                {
-                    // it is the detection of high byte address of 
-                    // 10-bit address, go to detection of low byte address
-                    prior_address_match = false;
-                    i2c1_slave_state = S_SLAVE_LOW_BYTE_ADDRESS_DETECT;
-
-                }
-                else // if (I2C1_READ_NOT_WRITE_STATUS_BIT == 1)
-                {
-                    if (prior_address_match == true)
-                    {
-                        // it is the detection of high byte
-                        // address of 10-bit address, but the next
-                        // transaction is read transaction (so it
-                        // is a restart).
-                        // set the transmit register with the data
-                        // to transmit then go to transmit mode
-
-                        I2C1_StatusCallback(I2C1_SLAVE_TRANSMIT_REQUEST_DETECTED);
-
-                        // during this portion, the master is expecting the
-                        // slave for a reply. So the returned status of
-                        // the callback at this point cannot be used to
-                        // delay the reply if needed.
-                        // In other words, the slave has to reply to the master.
-                        // Therefore, the transmit will be performed.
-
-                        I2C1_TransmitProcess();
-                        i2c1_slave_state = S_SLAVE_TRANSMIT_MODE;
-                    }
-                    else
-                    {
-                        // it is the detection of high byte address of
-                        // 10-bit address, but next transaction is a write.
-                        // go to detection of low byte address
-                        prior_address_match = false;
-                        i2c1_slave_state = S_SLAVE_LOW_BYTE_ADDRESS_DETECT;
-
-                    }
-                }
-
-                // dummy read is needed
-                dummy = I2C1_RECEIVE_REG;
-            }
-
-            // this if statement is to make sure we only save incoming
-            // data when we are truly in receiving mode
-            if (i2c1_slave_state == S_SLAVE_RECEIVE_MODE)
-            {
-                // case of data received
-                if (I2C1_DATA_NOT_ADDRESS_STATUS_BIT == 1)
-                {
-                    // check if we are overflowing the receive buffer
-                    if (I2C1_RECEIVE_OVERFLOW_STATUS_BIT != 1)
-                    {
-                        I2C1_ReceiveProcess();
-                        not_busy = I2C1_StatusCallback(I2C1_SLAVE_RECEIVED_DATA_DETECTED);
-                    }
-                    else
-                    {
-                        // overflow detected!
-                        // read the buffer to reset the buffer full flag
-                        // and clear the overflow bit
-                        // then do nothing so the master
-                        // will resend the data
-                        dummy = I2C1_RECEIVE_REG;
-                        I2C1_RECEIVE_OVERFLOW_STATUS_BIT = 0;
-                    }
-                }
-            }
-
-            break;
-
-        case S_SLAVE_LOW_BYTE_ADDRESS_DETECT:
-            // Note that this state will only get
-            // executed when 10-bit address is set
-
-            // we send receive request but we do not actually know
-            // if the next one is a data from master since the 
-            // next one can be a restart with a transmit request.
-            // When that happens, the next state will take care of it.
-            // This is just the nature of i2c bus protocol.
-            not_busy = I2C1_StatusCallback(I2C1_SLAVE_10BIT_RECEIVE_REQUEST_DETECTED);
-
-            // set this flag to indicate we have
-            // full 10-bit address detection
-            prior_address_match = true;
-
-            if (not_busy)
-            {
-                // dummy read is needed
-                dummy = I2C1_RECEIVE_REG;
-            }
-
-            i2c1_slave_state = S_SLAVE_RECEIVE_MODE;
-
-            break;
-
-        case S_SLAVE_TRANSMIT_MODE:
-
-            // this is the state where an ACK or NACK is expected
-            // to occur after the slave has placed data to the
-            // transmit register.
-
-            // if the transaction was ACK'ed, more data needs to be sent
-            // if the transaction was NACK'ed then we don't need to send
-            // more data
-            if (I2C1_ACKNOWLEDGE_STATUS_BIT == 0)
-            {
-                // prepare next data
-                I2C1_StatusCallback(I2C1_SLAVE_TRANSMIT_REQUEST_DETECTED);
-
-                // transmit more data
-                I2C1_TransmitProcess();
-                
-            }
-            else //if (I2C1_ACKNOWLEDGE_STATUS_BIT == 1)
-            {
-                // no more data to be sent so we go to idle state
-                i2c1_slave_state = S_SLAVE_IDLE;
-            }
-            break;
-
-
-        default:
-            // should never happen, if we ever get here stay here forever
-            while(1);
-            break;
+        IFS1bits.SI2C1IF = 0;
     }
-
-
-    // clear the slave interrupt flag
-    IFS1bits.SI2C1IF = 0;
-
+    else
+    {
+        I2C1CONLbits.SCLREL = 0;	
+        I2CSlaveHandler();
+        IFS1bits.SI2C1IF = 0; /* Clear SI2C interrupt flag */
+    }
 }
 
 void I2C1_ReadPointerSet(uint8_t *p)
@@ -386,13 +196,13 @@ uint8_t *I2C1_WritePointerGet(void)
 }
 
 void I2C1_SlaveAddressMaskSet(
-                                uint16_t mask)
+    uint16_t mask)
 {
     I2C1_MASK_REG = mask;
 }
 
 void I2C1_SlaveAddressSet(
-                                uint16_t address)
+    uint16_t address)
 {
     if (address > 0x7F)
     {
@@ -406,10 +216,9 @@ void I2C1_SlaveAddressSet(
     }
     i2c1_slave_state = S_SLAVE_IDLE;
     I2C1_ADDRESS_REG = address;
-
 }
 
-inline void __attribute__ ((always_inline)) I2C1_TransmitProcess(void)
+inline void __attribute__((always_inline)) I2C1_TransmitProcess(void)
 {
     // get the data to be transmitted
 
@@ -421,19 +230,17 @@ inline void __attribute__ ((always_inline)) I2C1_TransmitProcess(void)
 
     // set the SCL clock to be released
     I2C1_RELEASE_SCL_CLOCK_CONTROL_BIT = 1;
-
 }
 
-inline void __attribute__ ((always_inline)) I2C1_ReceiveProcess(void)
-{   
-    // store the received data 
-    
+inline void __attribute__((always_inline)) I2C1_ReceiveProcess(void)
+{
+    // store the received data
+
     // sanity check (to avoid stress)
     if (p_i2c1_write_pointer == NULL)
         return;
 
     *p_i2c1_write_pointer = I2C1_RECEIVE_REG;
-
 }
 
 /* Note: This is an example of the I2C1_StatusCallback()
@@ -453,104 +260,158 @@ bool I2C1_StatusCallback(I2C1_SLAVE_DRIVER_STATUS status)
     // is placed and data read from slave is taken
     /*
      Emulate EEPORM default memory size is 64bytes
- 
+
      Emulate EEPORM Read/Write Instruction:
-     --------------------------------------     
+     --------------------------------------
      Byte Write Instruction:
      |Start|slave Addr + w|Ack|AddrHighByte|Ack|AddrLowByte|Ack|data|Nack|Stop|
-     
+
      Page Write Instruction:
      |Start|slave Addr + w|Ack|AddrHighByte|Ack|AddrLowByte|Ack|dataByte n|Ack|...|data Byte n+x|Nack|Stop|
-     
+
      Byte Read Instruction:
      |Start|slave Addr + r|Ack|AddrHighByte|Ack|AddrLowByte|Ack|data|Nack|Stop|
 
      Page Read Instruction:
      |Start|slave Addr + r|Ack|AddrHighByte|Ack|AddrLowByte|Ack|dataByte n|Ack|...|dataByte n+x|Nack|Stop|
     */
-    
+
     static uint8_t EMULATE_EEPROM_Memory[EMULATE_EEPROM_SIZE] =
-            {
-                0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-                0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-                0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-                0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-                0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-                0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-                0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-                0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            };
+        {
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+            0xFF,
+        };
 
     static uint16_t address, addrByteCount;
-    static bool     addressState = true;
+    static bool addressState = true;
 
     switch (status)
     {
-        case I2C1_SLAVE_TRANSMIT_REQUEST_DETECTED:
-            // set up the slave driver buffer transmit pointer
-            I2C1_ReadPointerSet(&EMULATE_EEPROM_Memory[address++]);
-            if(address >= EMULATE_EEPROM_SIZE) {
+    case I2C1_SLAVE_TRANSMIT_REQUEST_DETECTED:
+        // set up the slave driver buffer transmit pointer
+        I2C1_ReadPointerSet(&EMULATE_EEPROM_Memory[address++]);
+        if (address >= EMULATE_EEPROM_SIZE)
+        {
+            address = 0;
+        }
+        break;
+
+    case I2C1_SLAVE_RECEIVE_REQUEST_DETECTED:
+
+        addrByteCount = 0;
+        addressState = true;
+
+        // set up the slave driver buffer receive pointer
+        I2C1_WritePointerSet(&i2c1_slaveWriteData);
+        break;
+
+    case I2C1_SLAVE_RECEIVED_DATA_DETECTED:
+
+        if (addressState == true)
+        {
+            // get the address of the memory being written
+            if (addrByteCount == 0)
+            {
+                address = (i2c1_slaveWriteData << 8) & 0xFF00;
+                addrByteCount++;
+            }
+            else if (addrByteCount == 1)
+            {
+                address = address | i2c1_slaveWriteData;
+                addrByteCount = 0;
+                addressState = false;
+            }
+
+            if (address >= EMULATE_EEPROM_SIZE)
+            {
+                address = EMULATE_EEPROM_SIZE;
+            }
+        }
+        else // if (addressState == false)
+        {
+            // set the memory with the received data
+            EMULATE_EEPROM_Memory[address++] = i2c1_slaveWriteData;
+            if (address >= EMULATE_EEPROM_SIZE)
+            {
                 address = 0;
             }
-            break;
+        }
 
-        case I2C1_SLAVE_RECEIVE_REQUEST_DETECTED:
+        break;
 
-            addrByteCount = 0;
-            addressState = true;
+    case I2C1_SLAVE_10BIT_RECEIVE_REQUEST_DETECTED:
 
-            // set up the slave driver buffer receive pointer
-            I2C1_WritePointerSet(&i2c1_slaveWriteData);
-            break;
+        // do something here when 10-bit address is detected
 
-        case I2C1_SLAVE_RECEIVED_DATA_DETECTED:
+        // 10-bit address is detected
 
-            if (addressState == true)
-            {
-                // get the address of the memory being written
-                if (addrByteCount == 0)
-                {
-                    address = (i2c1_slaveWriteData << 8) & 0xFF00;
-                    addrByteCount++;
-                }
-                else if (addrByteCount == 1)
-                {
-                    address = address | i2c1_slaveWriteData;
-                    addrByteCount = 0;
-                    addressState = false;
-                }
-                
-                if(address >= EMULATE_EEPROM_SIZE) {
-                    address = EMULATE_EEPROM_SIZE;
-                }
-            }
-            else // if (addressState == false)
-            {
-                // set the memory with the received data
-                EMULATE_EEPROM_Memory[address++] = i2c1_slaveWriteData;
-                if(address >= EMULATE_EEPROM_SIZE) {
-                    address = 0;
-                }
-            }
+        break;
 
-            break;
-
-        case I2C1_SLAVE_10BIT_RECEIVE_REQUEST_DETECTED:
-
-            // do something here when 10-bit address is detected
-
-            // 10-bit address is detected
-
-            break;
-
-        default:
-            break;
-
+    default:
+        break;
     }
 
     return true;
 }
-
-
-
-
