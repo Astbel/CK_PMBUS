@@ -51,6 +51,7 @@
 #include "tmr1.h"
 #include "i2c1.h"
 #include "../SRC/pmbus_stack.h"
+#include "../SRC/Gernirc_Type.h"
 
 
 /**
@@ -137,7 +138,6 @@ uint16_t TMR1_Counter16BitGet(void)
   return (TMR1);
 }
 
-
 void TMR1_Start(void)
 {
   /* Reset the status information */
@@ -221,7 +221,25 @@ void __attribute__((interrupt, no_auto_psv)) _T1Interrupt()
 /*回調函示*/
 void __attribute__((weak)) TMR1_CallBack(void)
 {
+  if ((I2C1STATbits.P == 1) && (IFS1bits.SI2C1IF == 0))
+  {
+    T1CONbits.TON = 0;
 
+    if (((i2c_flags.wr_prot == 1) || (protocolCMD == 0x0)) && (global_flags.comm_errors == 0) && (protocolCMD != 0x4))
+    {
+      if (codeCMD == 0x3) /* Example of call to an APP function */
+      {
+        Clear_faults();
+      }
+
+      global_flags.ready_to_copy = 1; /* If command was write transaction setting this flag allows
+                          data to be copied from buffer to RAM */
+    }
+
+    i2c_flags.flag_rw = 0;
+
+    I2C1CONLbits.SCLREL = 1; /* Release SCL Clock */
+  }
 }
 
 void TMR1_SetInterruptHandler(void (*InterruptHandler)(void))

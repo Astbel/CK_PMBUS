@@ -5,7 +5,8 @@
         "pin_manager.h": "c",
         "myheader.h": "c",
         "myvalue.h": "c",
-        "pmbus_stack.h": "c"
+        "pmbus_stack.h": "c",
+        "interrupt_manager.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
