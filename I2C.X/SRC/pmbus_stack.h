@@ -24,7 +24,15 @@
    public func
 -----------------------------------------------*/
 void I2C_Fun(void);
+void I2C_slave_handler(void);
+void Clear_faults(void);
+void HostWritesCommandByte(void);
+void HostWritesNextBytes(void);
+void HostReadsAddr(void);
+void HostReadsData(void);
+void TransmissionContentFaultHandler(char token);
 
+extern char Example_APP_func(unsigned char codeCMD);
 
 #ifdef __cplusplus
 extern "C"

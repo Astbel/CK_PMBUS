@@ -50,6 +50,7 @@
 #include "mcc_generated_files/pin_manager.h"
 #include "stdio.h"
 #include "SRC/MyHeader.h"
+#include "SRC/pmbus_stack.h"
 
 /*
                          Main application
@@ -61,6 +62,8 @@ int main(void)
   SYSTEM_Initialize();
 
   Init_value();
+
+  ClearCommandData(); /* Clear commands RAM locations */
   while (1)
   {
 
@@ -73,7 +76,11 @@ int main(void)
     //                          TEST_ADDR);
 
     //     I2C1_MasterWrite(&writeBuffer,1,TEST_ADDR,I2C1_MESSAGE_COMPLETE);
-
+    //  if (global_flags.ready_to_copy == 1) /* Buffer ready to be copied? */
+    //   {
+    //      global_flags.ready_to_copy = 0;
+    //      CopyBufferInRam();
+    //   }
   
   }
   return 1;

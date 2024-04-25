@@ -4,7 +4,7 @@
    include func
 -----------------------------------------------*/
 #include "MyHeader.h"
-
+#define SLAVE_ADDR 0x40 
 
 /*-----------------------------------------------
    struct enum 

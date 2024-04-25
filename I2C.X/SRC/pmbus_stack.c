@@ -46,8 +46,6 @@
 #include "commands.h"
 #include "Myvalue.h"
 
-
-
 unsigned char counter_MWD = 0;
 unsigned char counter_MRD = 0;
 unsigned char byteCRC = 0;
@@ -782,7 +780,7 @@ void I2CSlaveHandler(void)
         {
             if (counter_MWD == 0)
             {
-                HostWritesCommandByte();  /*I2C CMD READ/WRITE*/
+                HostWritesCommandByte(); /*I2C CMD READ/WRITE*/
             }
 
             else
@@ -804,7 +802,7 @@ void I2CSlaveHandler(void)
         else
         {
             TransmissionContentFaultHandler(2); /* Improper address bit in the address byte */
-            WriteData(0xFF);  /* 錯誤代碼 &  clear memory block */
+            WriteData(0xFF);                    /* 錯誤代碼 &  clear memory block */
         }
         break;
 
@@ -875,19 +873,15 @@ void __attribute__((weak)) TMR1_CallBack(void)
 /********************************************************************
  * Function:        call back function for Timer1
  *
- * Parameter:     uint8_t *pdata    I2C 寫入 data  
+ * Parameter:     uint8_t *pdata    I2C 寫入 data
  *                uint8_t length    Data 大小
- *                uint16_t address  Salver 地址 
- *                I2C1_MESSAGE_STATUS *pstatus  I2C狀態 
+ *                uint16_t address  Salver 地址
+ *                I2C1_MESSAGE_STATUS *pstatus  I2C狀態
  *
  * Note:            Testting Callback I2C function
  *******************************************************************/
 void I2C_Fun(void)
 {
-    
+
     // I2C1_MasterWrite(&writeBuffer,1,TEST_ADDR,I2C1_MESSAGE_COMPLETE);
-
-    
 }
-
-
