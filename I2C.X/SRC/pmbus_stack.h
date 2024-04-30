@@ -50,7 +50,7 @@ extern unsigned char protocol;
 extern unsigned char nr_bytes;
 extern unsigned char device_busy;
 extern unsigned char buffer[];
-
+/*字節大小*/
 extern unsigned char OPERATION[1];
 extern unsigned char ON_OFF_CONFIG[1];
 extern unsigned char QUERRY[2];

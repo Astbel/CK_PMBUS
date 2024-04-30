@@ -19,6 +19,8 @@
         <itemPath>mcc_generated_files/watchdog.h</itemPath>
         <itemPath>mcc_generated_files/reset_types.h</itemPath>
         <itemPath>mcc_generated_files/system_types.h</itemPath>
+        <itemPath>mcc_generated_files/pwm.h</itemPath>
+        <itemPath>mcc_generated_files/pwm_module_features.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
@@ -46,6 +48,7 @@
         <itemPath>mcc_generated_files/clock.c</itemPath>
         <itemPath>mcc_generated_files/traps.c</itemPath>
         <itemPath>mcc_generated_files/i2c1.c</itemPath>
+        <itemPath>mcc_generated_files/pwm.c</itemPath>
       </logicalFolder>
       <logicalFolder name="SRC" displayName="SRC" projectFiles="true">
         <itemPath>SRC/pmbus_stack.c</itemPath>

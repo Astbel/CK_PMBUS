@@ -54,6 +54,152 @@
 /**
     Section: Device Pin Macros
 */
+/**
+  @Summary
+    Sets the GPIO pin, RB4, high using LATB4.
+
+  @Description
+    Sets the GPIO pin, RB4, high using LATB4.
+
+  @Preconditions
+    The RB4 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RB4 high (1)
+    GPIO_4_SetHigh();
+    </code>
+
+*/
+#define GPIO_4_SetHigh()          (_LATB4 = 1)
+/**
+  @Summary
+    Sets the GPIO pin, RB4, low using LATB4.
+
+  @Description
+    Sets the GPIO pin, RB4, low using LATB4.
+
+  @Preconditions
+    The RB4 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RB4 low (0)
+    GPIO_4_SetLow();
+    </code>
+
+*/
+#define GPIO_4_SetLow()           (_LATB4 = 0)
+/**
+  @Summary
+    Toggles the GPIO pin, RB4, using LATB4.
+
+  @Description
+    Toggles the GPIO pin, RB4, using LATB4.
+
+  @Preconditions
+    The RB4 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Toggle RB4
+    GPIO_4_Toggle();
+    </code>
+
+*/
+#define GPIO_4_Toggle()           (_LATB4 ^= 1)
+/**
+  @Summary
+    Reads the value of the GPIO pin, RB4.
+
+  @Description
+    Reads the value of the GPIO pin, RB4.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    uint16_t portValue;
+
+    // Read RB4
+    postValue = GPIO_4_GetValue();
+    </code>
+
+*/
+#define GPIO_4_GetValue()         _RB4
+/**
+  @Summary
+    Configures the GPIO pin, RB4, as an input.
+
+  @Description
+    Configures the GPIO pin, RB4, as an input.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RB4 as an input
+    GPIO_4_SetDigitalInput();
+    </code>
+
+*/
+#define GPIO_4_SetDigitalInput()  (_TRISB4 = 1)
+/**
+  @Summary
+    Configures the GPIO pin, RB4, as an output.
+
+  @Description
+    Configures the GPIO pin, RB4, as an output.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RB4 as an output
+    GPIO_4_SetDigitalOutput();
+    </code>
+
+*/
+#define GPIO_4_SetDigitalOutput() (_TRISB4 = 0)
 
 /**
     Section: Function Prototypes

@@ -128,7 +128,7 @@ void I2C1_Initialize(void)
     // BCL disabled; P disabled; S disabled; I2COV disabled; IWCOL disabled;
     I2C1STAT = 0x00;
     // ADD 64;
-    I2C1_SlaveAddressSet(0x40);
+    I2C1_SlaveAddressSet(SLAVE_ADDR);
     // AMSK 0;
     I2C1_SlaveAddressMaskSet(0x00);
 

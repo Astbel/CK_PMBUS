@@ -68,6 +68,7 @@ int main(void)
   ClearCommandData(); /* Clear commands RAM locations */
   while (1)
   {
+    /*MCHP I2C TEST Write func*/
 
     // this initial value is important
     //  writeBuffer[0] = i2cWrData;
@@ -78,6 +79,9 @@ int main(void)
     //                          TEST_ADDR);
 
     //     I2C1_MasterWrite(&writeBuffer,1,TEST_ADDR,I2C1_MESSAGE_COMPLETE);
+     
+     
+     /*pmbus func*/ 
      if (global_flags.ready_to_copy == 1) /* Buffer ready to be copied? */
       {
          global_flags.ready_to_copy = 0;
