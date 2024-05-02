@@ -109,6 +109,8 @@ void TMR1_Initialize(void)
   IFS0bits.T1IF = false;
   IEC0bits.T1IE = true;
 
+
+  T1CONbits.TON = 0; /* disable Timer here */
   tmr1_obj.timerElapsed = false;
 }
 
@@ -214,13 +216,15 @@ void __attribute__((interrupt, no_auto_psv)) _T1Interrupt()
 
   //***User Area End
 
-  tmr1_obj.count++;
-  tmr1_obj.timerElapsed = true;
-  IFS0bits.T1IF = false;
+  // tmr1_obj.count++;
+  // tmr1_obj.timerElapsed = true;
+  // IFS0bits.T1IF = false;
 }
 /*回調函示*/
 void __attribute__((weak)) TMR1_CallBack(void)
 {
+  IFS0bits.T1IF = 0;
+  TMR1 = 0;
   if ((I2C1STATbits.P == 1) && (IFS1bits.SI2C1IF == 0))
   {
     T1CONbits.TON = 0;

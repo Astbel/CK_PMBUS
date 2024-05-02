@@ -98,7 +98,7 @@ extern unsigned char PMBUS_REVISION[1];
    public func
 -----------------------------------------------*/
 void I2C_Fun(void);
-void I2C_slave_handler(void);
+void I2CSlaveHandler(void);
 void Clear_faults(void);
 void HostWritesCommandByte(void);
 void HostWritesNextBytes(void);
@@ -107,7 +107,10 @@ void HostReadsData(void);
 void TransmissionContentFaultHandler(char token);
 void Clear_faults(void);
 void Init_Struct_Fun(void);
-extern char Example_APP_func(unsigned char codeCMD);
+char Example_APP_func(unsigned char codeCMD);
+void ClearCommandData(void);
+void CopyBufferInRam(void);
+
 
 #ifdef __cplusplus
 extern "C"

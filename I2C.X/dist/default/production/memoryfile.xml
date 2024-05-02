@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project>
-  <executable name="dist/default/debug/I2C.X.debug.elf">
+  <executable name="dist/default/production/I2C.X.production.elf">
     <memory name="data">
       <units>bytes</units>
       <length>8192</length>
-      <used>330</used>
-      <free>7862</free>
+      <used>250</used>
+      <free>7942</free>
     </memory>
     <memory name="program">
       <units>bytes</units>
       <length>66432</length>
-      <used>4323</used>
-      <free>62109</free>
+      <used>4320</used>
+      <free>62112</free>
     </memory>
   </executable>
 </project>
