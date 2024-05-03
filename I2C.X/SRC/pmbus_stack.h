@@ -29,8 +29,16 @@ typedef struct
     uint8_t wr_prot;
 }PMBUS_connect;
 
+/*-----------------------------------------------
+ Struct Enum  Uion
+-----------------------------------------------*/
 extern Flag global_flags;
 extern PMBUS_connect i2c_flags;
+/*-----------------------------------------------
+    Ptr Struct Enum  Uion
+-----------------------------------------------*/
+extern Flag *PTR_global_flags;
+extern PMBUS_connect *PTR_i2c_flags;
 
 /*-----------------------------------------------
     Variable

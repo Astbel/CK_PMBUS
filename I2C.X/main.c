@@ -82,11 +82,11 @@ int main(void)
      
      
      /*pmbus func*/ 
-     if (global_flags.ready_to_copy == 1) /* Buffer ready to be copied? */
-      {
-         global_flags.ready_to_copy = 0;
-         CopyBufferInRam();
-      }
+    //  if (PTR_global_flags->ready_to_copy == 1) /* Buffer ready to be copied? */
+    //   {
+    //     PTR_global_flags->ready_to_copy  = 0;
+    //      CopyBufferInRam();
+    //   }
   
   }
   return 1;

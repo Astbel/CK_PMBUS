@@ -53,7 +53,6 @@
 #include "../SRC/pmbus_stack.h"
 #include "../SRC/Gernirc_Type.h"
 
-
 /**
  Section: File specific functions
 */
@@ -108,7 +107,6 @@ void TMR1_Initialize(void)
 
   IFS0bits.T1IF = false;
   IEC0bits.T1IE = true;
-
 
   T1CONbits.TON = 0; /* disable Timer here */
   tmr1_obj.timerElapsed = false;
@@ -238,6 +236,11 @@ void __attribute__((weak)) TMR1_CallBack(void)
 
       global_flags.ready_to_copy = 1; /* If command was write transaction setting this flag allows
                           data to be copied from buffer to RAM */
+      if (global_flags.ready_to_copy == 1)
+      {
+        global_flags.ready_to_copy = 0;
+        CopyBufferInRam();
+      }
     }
 
     i2c_flags.flag_rw = 0;

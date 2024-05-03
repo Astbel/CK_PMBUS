@@ -48,19 +48,25 @@
 /************************************************/
 /*                   變數區                     */
 /************************************************/
-uint8_t counter_MWD ;
-uint8_t counter_MRD ;
-uint8_t byteCRC ;
-uint8_t codeCMD ;
-uint8_t dumpI2CBUF ;
-uint8_t matrixIndex ;
-uint8_t protocolCMD ;
+uint8_t counter_MWD;
+uint8_t counter_MRD;
+uint8_t byteCRC;
+uint8_t codeCMD;
+uint8_t dumpI2CBUF;
+uint8_t matrixIndex;
+uint8_t protocolCMD;
 uint8_t byteNr;
 /************************************************/
 /*                   結構體                    */
 /************************************************/
-Flag global_flags= {0, 0, 0};
-PMBUS_connect i2c_flags= {0, 0};
+Flag global_flags = {0, 0, 0};
+PMBUS_connect i2c_flags = {0, 0};
+/************************************************/
+/*                   PTR                        */
+/************************************************/
+Flag *PTR_global_flags;
+PMBUS_connect *PTR_i2c_flags;
+
 /************************************************/
 unsigned char OPERATION[1];
 unsigned char ON_OFF_CONFIG[1];
@@ -915,15 +921,16 @@ void I2C_Fun(void)
 void Init_Struct_Fun(void)
 {
     /*Variable*/
-     counter_MWD = 0;
-     counter_MRD = 0;
-     byteCRC = 0;
-     codeCMD = 0;
-     dumpI2CBUF = 0;
-     matrixIndex = 0;
-     protocolCMD = 0;
-     byteNr = 0;
+    counter_MWD = 0;
+    counter_MRD = 0;
+    byteCRC = 0;
+    codeCMD = 0;
+    dumpI2CBUF = 0;
+    matrixIndex = 0;
+    protocolCMD = 0;
+    byteNr = 0;
 
     /* struct */
-
+    PTR_global_flags=&global_flags;
+    PTR_i2c_flags=&i2c_flags;
 }
